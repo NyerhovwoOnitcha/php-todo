@@ -62,5 +62,25 @@ pipeline {
             sh 'zip -qr php-todo.zip ${WORKSPACE}/*'
       }
     }
+
+    stage ('Upload Artifact to Artifactory') {
+      steps {
+        script {
+          def server = Artifactory.server 'artifactory-server'                 
+                 def uploadSpec = """{
+                    "files": [
+                      {
+                       "pattern": "php-todo.zip",
+                       "target": "papiApp/php-todo",
+                       "props": "type=zip;status=ready"
+
+                       }
+                    ]
+                 }""" 
+
+                 server.upload spec: uploadSpec
+        }  
+      }
+    }
   }
 }
