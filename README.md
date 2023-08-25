@@ -17,5 +17,3 @@
 
 
 ## completely irrelevant sentence just to trigger jenkins
-## another completely irrelevant sentence to trigger jenkins
-## another completely irrelevant sentence to trigger jenkins
