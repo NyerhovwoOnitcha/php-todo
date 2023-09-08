@@ -57,47 +57,49 @@ pipeline {
       }
     }
 
-//     stage('SonarQube Quality Gate') {
-//         environment {
-//             scannerHome = tool 'SonarQubeScanner'
-//         }
-//         steps {
-//             withSonarQubeEnv('sonarqube') {
-//                 sh "${scannerHome}/bin/sonar-scanner"
-//             }
+    stage('SonarQube Quality Gate') {
+        environment {
+            scannerHome = tool 'SonarQubeScanner'
+        }
+        steps {
+            withSonarQubeEnv('sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner"
+            }
 
-//         }
-//     }
-
-    stage ('Package Artifact') {
-      steps {
-            sh 'zip -qr php-todo.zip ${WORKSPACE}/*'
-      }
+        }
     }
 
-    stage ('Upload Artifact to Artifactory') {
-      steps {
-        script {
-          def server = Artifactory.server 'artifactory-server'                 
-          def uploadSpec = """{
-            "files": [
-               {
-                "pattern": "php-todo.zip",
-                 "target": "todo-app/php-todo",
-                 "props": "type=zip;status=ready"
-               }
-            ]
-          }"""        
+  //   stage ('Package Artifact') {
+  //     steps {
+  //           sh 'zip -qr php-todo.zip ${WORKSPACE}/*'
+  //     }
+  //   }
 
-        server.upload spec: uploadSpec
-        }  
-      }
-    }
+  //   stage ('Upload Artifact to Artifactory') {
+  //     steps {
+  //       script {
+  //         def server = Artifactory.server 'artifactory-server'                 
+  //         def uploadSpec = """{
+  //           "files": [
+  //              {
+  //               "pattern": "php-todo.zip",
+  //                "target": "todo-app/php-todo",
+  //                "props": "type=zip;status=ready"
+  //              }
+  //           ]
+  //         }"""        
 
-    stage ('Deploy to Dev Environment') {
-      steps {
-         build job: 'CI-CD-Pipeline/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
-       }
-    }
+  //       server.upload spec: uploadSpec
+  //       }  
+  //     }
+  //   }
+
+  //   stage ('Deploy to Dev Environment') {
+  //     steps {
+  //        build job: 'CI-CD-Pipeline/main', parameters: [[$class: 'StringParameterValue', name: 'env', value: 'dev']], propagate: false, wait: true
+  //      }
+  //   }
   }
+
+  
 }
