@@ -31,6 +31,7 @@ pipeline {
       steps {
              sh './vendor/bin/phpunit'
       } 
+    } 
     
   }
 } 
